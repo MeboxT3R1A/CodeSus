@@ -1,16 +1,25 @@
-package anao.min
+import com.google.gson.Gson
+import java.net.URI
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse.BodyHandlers
+import kotlin.jvm.java
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-fun main() {
-    val name = "Kotlin"
-    //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-    // to see how IntelliJ IDEA suggests fixing it.
-    println("Hello, " + name + "!")
+fun main(){
+    val client: HttpClient = HttpClient.newHttpClient()
 
-    for (i in 1..5) {
-        //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-        // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-        println("i = $i")
-    }
+    val request = HttpRequest.newBuilder()
+        .uri(URI.create("https://pokeapi.co/api/v2/pokemon-form/701"))
+        .build()
+
+    val response = client
+        .send(request, BodyHandlers.ofString())
+
+    val dados = response.body()
+
+    val gson = Gson()
+
+    val buscarAPI = gson.fromJson(dados, Info::class.java)
+
+    print(buscarAPI)
 }
